@@ -1,0 +1,9 @@
+ml_scripts_dir: "/home/kousis/work/test/ml"
+output_dir: "/home/kousis/work/test/output"
+vcf_input: "/home/kousis/work/test/input.vcf"
+enable_imputation: true
+beagle_dir: "/home/kousis/work/test/beagle"
+wanted_positions_panel: "/home/kousis/work/test/wanted_positions.vcf.gz"
+ml_algorithm: "both"
+bed_file_algorithm1: "/home/kousis/work/test/bedfile1.bed"
+bed_file_algorithm2: "/home/kousis/work/test/bedfile2.bed"
