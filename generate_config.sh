@@ -116,14 +116,14 @@ zenity --info --title="Success!" --text="Configuration file '$config_file' has b
 run_pipeline=$(zenity --question --title="Run Pipeline?" --text="Do you want to start the pipeline now?" --ok-label="Yes" --cancel-label="No")
 
 if [[ $? -eq 0 ]]; then
-    if [[ ! -f "process_yaml.sh" ]]; then
-        zenity --error --text="Error: process_yaml.sh not found! Please ensure it exists in the current directory."
+    if [[ ! -f "run.sh" ]]; then
+        zenity --error --text="Error: run.sh not found! Please ensure it exists in the current directory."
         exit 1
     fi
     zenity --info --text="Starting the pipeline..."
-    bash process_yaml.sh "$config_file"
+    bash run.sh "$config_file"
 else
-    zenity --info --text="You can start the pipeline later by running: ./process_yaml.sh config.yaml"
+    zenity --info --text="You can start the pipeline later by running: ./run.sh config.yaml"
 fi
 
 echo "Configuration complete."
