@@ -1,5 +1,9 @@
 #!/bin/bash
 
+
+# Activate Conda env
+conda env create -f krasia.yml # This need fixing but no time now
+conda activate krasia
 # Function to parse YAML
 parse_yaml() {
     local yaml_file="$1"
