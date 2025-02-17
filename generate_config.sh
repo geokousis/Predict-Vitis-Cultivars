@@ -16,7 +16,7 @@ if [[ -z "$output_dir" ]]; then
     exit 1
 fi
 
-# Ask for ML scripts directory
+# Ask for ML scripts directory (transform_gt.sh is inside this directory)
 ml_scripts_dir=$(zenity --file-selection --directory --title="Select ML Scripts Directory")
 if [[ -z "$ml_scripts_dir" ]]; then
     zenity --error --text="ML scripts directory is required!"
@@ -37,11 +37,11 @@ if [[ -z "$enable_imputation" ]]; then
     exit 1
 fi
 
-# If imputation is enabled, ask for Beagle directory and wanted positions panel
+# If imputation is enabled, ask for Beagle JAR file and wanted positions panel
 if [[ "$enable_imputation" == "true" ]]; then
-    beagle_dir=$(zenity --file-selection --directory --title="Select Beagle Directory")
-    if [[ -z "$beagle_dir" ]]; then
-        zenity --error --text="Beagle directory is required!"
+    beagle_file=$(zenity --file-selection --title="Select Beagle JAR File (beagle.jar)")
+    if [[ -z "$beagle_file" ]]; then
+        zenity --error --text="Beagle JAR file is required!"
         exit 1
     fi
 
@@ -76,13 +76,6 @@ if [[ "$ml_algorithm" == "algorithm2" || "$ml_algorithm" == "both" ]]; then
     fi
 fi
 
-# Ask for the transform_gt script path
-transform_gt_script=$(zenity --file-selection --title="Select transform_gt.sh Script")
-if [[ -z "$transform_gt_script" ]]; then
-    zenity --error --text="The transform_gt script is required!"
-    exit 1
-fi
-
 # Create config.yaml file
 config_file="config.yaml"
 echo "Creating $config_file..."
@@ -96,7 +89,7 @@ EOL
 
 if [[ "$enable_imputation" == "true" ]]; then
 cat >> "$config_file" <<EOL
-beagle_dir: "$beagle_dir"
+beagle_file: "$beagle_file"
 wanted_positions_panel: "$wanted_positions_panel"
 EOL
 fi
@@ -117,24 +110,20 @@ bed_file_algorithm2: "$bed_file_algorithm2"
 EOL
 fi
 
-cat >> "$config_file" <<EOL
-transform_gt_script: "$transform_gt_script"
-EOL
-
 zenity --info --title="Success!" --text="Configuration file '$config_file' has been created successfully!"
 
 # Ask if the user wants to start the pipeline
 run_pipeline=$(zenity --question --title="Run Pipeline?" --text="Do you want to start the pipeline now?" --ok-label="Yes" --cancel-label="No")
 
 if [[ $? -eq 0 ]]; then
-    if [[ ! -f "run.sh" ]]; then
-        zenity --error --text="Error: run.sh not found! Please ensure it exists in the current directory."
+    if [[ ! -f "process_yaml.sh" ]]; then
+        zenity --error --text="Error: process_yaml.sh not found! Please ensure it exists in the current directory."
         exit 1
     fi
     zenity --info --text="Starting the pipeline..."
-    bash run.sh "$config_file"
+    bash process_yaml.sh "$config_file"
 else
-    zenity --info --text="You can start the pipeline later by running: ./run.sh config.yaml"
+    zenity --info --text="You can start the pipeline later by running: ./process_yaml.sh config.yaml"
 fi
 
 echo "Configuration complete."
